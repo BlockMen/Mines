@@ -13,7 +13,7 @@ if not MINE_FACTOR then
 end
 
 minetest.register_node("mines:dummy", {
-	description = "Air (you hacker you!)",
+	description = "Mine Air (you hacker you!)",
 	inventory_image = "unknown_node.png",
 	wield_image = "unknown_node.png",
 	drawtype = "airlike",
@@ -28,15 +28,12 @@ minetest.register_node("mines:dummy", {
 	groups = {not_in_creative_inventory=1},
 })
 
-
-local ids = {
-	c_air = minetest.get_content_id("air"),
-	c_fence = minetest.get_content_id("default:fence_wood"),
-	c_wood = minetest.get_content_id("default:wood"),
-	c_water = minetest.get_content_id("default:water_source"),
-	c_dummy = minetest.get_content_id("mines:dummy")
-
-}
+-- get node content ids
+local c_air = minetest.get_content_id("air")
+local c_fence = minetest.get_content_id("default:fence_wood")
+local c_wood = minetest.get_content_id("default:wood")
+local c_water = minetest.get_content_id("default:water_source")
+local c_dummy = minetest.get_content_id("mines:dummy")
 
 local chest_stuff = {
 	{name="default:apple", max = 3},
@@ -45,10 +42,7 @@ local chest_stuff = {
 	{name="default:gold_ingot", max = 2},
 	{name="default:diamond", max = 1},
 	{name="default:pick_steel", max = 1},
-	{name="default:pick_diamond", max = 1},
-	{name="default:torch", max = 99},
-	{name="default:cobble", max = 50},
-	{name="default:torch", max = 99}
+	{name="default:pick_diamond", max = 1}
 }
 
 local function rotate_torch(pos)
@@ -112,19 +106,19 @@ local function make_mine(mpos,p2,p3, vm_data, vx_area,cnt, flooded)
 	switch = n_switch
 
 		for i=0,20,1 do
-			local pillar = ids.c_air
-			local pillar_top = ids.c_air
+			local pillar = c_air
+			local pillar_top = c_air
 			if flooded then
-				pillar = ids.c_water
-				pillar_top = ids.c_water
+				pillar = c_water
+				pillar_top = c_water
 			end
-			local fill_with = ids.c_air
+			local fill_with = c_air
 			if flooded then
-				fill_with = ids.c_water
+				fill_with = c_water
 			end
 			if i==0 or i == 5 or i == 10 or i == 15 or i == 20 then
-				pillar = ids.c_fence
-				pillar_top = ids.c_wood
+				pillar = c_fence
+				pillar_top = c_wood
 			end
 			local x1
 			local x2
@@ -196,13 +190,13 @@ local function make_mine(mpos,p2,p3, vm_data, vx_area,cnt, flooded)
 			vm_data[vx_area:indexp({x=x3, y=pos.y+1, z=z3})] = pillar_top
 
 			if not flooded and math.random(0,6) == 3 then
-				vm_data[vx_area:indexp({x=x4, y=pos.y-1, z=z4})] = ids.c_dummy
+				vm_data[vx_area:indexp({x=x4, y=pos.y-1, z=z4})] = c_dummy
 				rotate_torch({x=x4, y=pos.y-1, z=z4})
 			end
 			if math.random(0,60) == 13 then
 				local p = {x=x5, y=pos.y-1, z=z5}
-				if vm_data[vx_area:indexp(p)] ~= ids.c_fence then
-					vm_data[vx_area:indexp(p)] = ids.c_dummy
+				if vm_data[vx_area:indexp(p)] ~= c_fence then
+					vm_data[vx_area:indexp(p)] = c_dummy
 					fill_chest(p)
 				end
 			end
@@ -233,7 +227,7 @@ end
 
 local function find_cave(min,max,vm_data, vx_area)
 	for i in vx_area:iterp(min, max) do
-		if vm_data[i] == ids.c_air then
+		if vm_data[i] == c_air then
 			local p = vx_area:position(i)
 			if p.y <= MINE_DEEP_MIN then out = p end
 		end
